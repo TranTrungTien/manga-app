@@ -3,109 +3,119 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { memo } from 'react';
+import LazyLoad from 'react-lazy-load';
 import { FreeMode, Mousewheel, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Comic } from '~/types';
-import Link from 'next/link';
-import { MANGA_PATH_DETAILS_NAME, MANGA_PATH_NAME } from '~/constants';
+import useSWR from 'swr';
 import ClientOnly from '~/components/shared/ClientOnly';
-import LazyLoad from 'react-lazy-load';
+import {
+  MANGA_PATH_DETAILS_NAME,
+  MANGA_PATH_NAME,
+  STATUS_MAPPING,
+} from '~/constants';
+import { axiosClientV2 } from '~/services/axiosClient';
+import { Comic } from '~/types';
+import dayjs from 'dayjs';
 
-interface SeasonalComicsProps {
-    comics: Comic[];
-}
+const SeasonalComics = () => {
+  const { data: comics } = useSWR<Comic[]>('manga', async () => {
+    const { data } = await axiosClientV2.get('/v1/api/the-loai/manga?page=1');
+    const { items: comics } = data;
+    return comics;
+  });
+  return (
+    <div className="my-4 h-[250px] w-full bg-red-500/0 text-white md:h-[300px]">
+      <ClientOnly>
+        <Swiper
+          breakpoints={{
+            1: {
+              slidesPerView: 1,
+            },
+            480: {
+              slidesPerView: 2,
+            },
+            640: {
+              slidesPerView: 3,
+            },
+          }}
+          spaceBetween={30}
+          mousewheel
+          freeMode={true}
+          loop
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Mousewheel, Pagination, FreeMode]}
+          className="section-swiper full-size hover:cursor-grab"
+        >
+          {comics?.length
+            ? comics?.map((comic) => {
+                return (
+                  <LazyLoad key={comic?._id}>
+                    <SwiperSlide className="absolute-center pb-4 md:pb-0">
+                      <Link
+                        href={`/${MANGA_PATH_NAME}/${MANGA_PATH_DETAILS_NAME}/${encodeURIComponent(
+                          comic?.slug,
+                        )}`}
+                      >
+                        <a className="full-size">
+                          <div className="full-size grid grid-cols-5 overflow-hidden rounded-xl bg-deep-black">
+                            <figure className="relative col-span-1 md:col-span-2 lg:col-span-1">
+                              <Image
+                                priority
+                                layout="fill"
+                                className="absolute inset-0 object-cover object-center"
+                                src={`https://img.otruyenapi.com/uploads/comics/${comic?.thumb_url}`}
+                                alt="comic-img"
+                              />
+                            </figure>
+                            <div className="col-span-4 flex flex-col px-6 py-2 md:col-span-3 md:space-y-4 lg:col-span-4">
+                              <h1 className="line-clamp-2 font-secondary text-3xl transition-all duration-200 hover:text-primary lg:text-4xl">
+                                {comic?.name}
+                              </h1>
 
-function SeasonalComics({ comics }: SeasonalComicsProps) {
-    return (
-        <div className="my-4 h-[250px] w-full bg-red-500/0 text-white md:h-[300px]">
-            <ClientOnly>
-                <Swiper
-                    breakpoints={{
-                        1: {
-                            slidesPerView: 1,
-                        },
-                        480: {
-                            slidesPerView: 2,
-                        },
-                        640: {
-                            slidesPerView: 3,
-                        },
-                    }}
-                    spaceBetween={30}
-                    mousewheel
-                    freeMode={true}
-                    loop
-                    pagination={{
-                        clickable: true,
-                    }}
-                    modules={[Mousewheel, Pagination, FreeMode]}
-                    className="section-swiper full-size hover:cursor-grab"
-                >
-                    {comics && comics.length
-                        ? comics.map((comic) => {
-                              return (
-                                  <LazyLoad key={comic._id}>
-                                      <SwiperSlide className="absolute-center pb-4 md:pb-0">
-                                          <Link
-                                              href={`/${MANGA_PATH_NAME}/${MANGA_PATH_DETAILS_NAME}/${encodeURIComponent(
-                                                  comic?.slug,
-                                              )}`}
-                                          >
-                                              <a className="full-size">
-                                                  <div className="full-size grid grid-cols-5 overflow-hidden rounded-xl bg-deep-black">
-                                                      <figure className="relative col-span-1 md:col-span-2 lg:col-span-1">
-                                                          <Image
-                                                              priority
-                                                              layout="fill"
-                                                              className="absolute inset-0 object-cover object-center"
-                                                              src={
-                                                                  comic?.thumbnail
-                                                              }
-                                                              alt="comic-img"
-                                                          />
-                                                      </figure>
-                                                      <div className="col-span-4 flex flex-col px-6 py-2 md:col-span-3 md:space-y-4 lg:col-span-4">
-                                                          <h1 className="font-secondary text-3xl transition-all duration-200 line-clamp-2 hover:text-primary lg:text-4xl">
-                                                              {comic?.name}
-                                                          </h1>
+                              <p className="lg:line-clamp-[9] line-clamp-6 text-xl font-light md:text-2xl">
+                                Trạng thái: {STATUS_MAPPING[comic?.status]}
+                              </p>
+                              <p className="lg:line-clamp-[9] line-clamp-6 text-xl font-light md:text-2xl">
+                                Chap: {comic?.chaptersLatest[0]?.chapter_name}
+                              </p>
+                              <p className="lg:line-clamp-[9] line-clamp-6 text-xl font-light md:text-2xl">
+                                Cập nhật:
+                                {dayjs(comic?.updatedAt).format('DD/MM/YYYY')}
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+                      </Link>
+                    </SwiperSlide>
+                  </LazyLoad>
+                );
+              })
+            : Array.from(Array(4).keys()).map((e) => {
+                return (
+                  <SwiperSlide key={e} className="absolute-center">
+                    <a className="full-size">
+                      <div className="full-size grid grid-cols-5 overflow-hidden rounded-xl bg-deep-black">
+                        <figure className="relative col-span-1">
+                          <div className="loading-pulse full-size bg-white/20"></div>
+                        </figure>
+                        <div className="col-span-4 flex flex-col px-6 py-2 md:space-y-4">
+                          <div className="loading-pulse min-h-[30px] w-full rounded-xl bg-white/20"></div>
 
-                                                          <p className="text-xl font-light line-clamp-6 md:text-2xl lg:line-clamp-[9]">
-                                                              {comic?.review}
-                                                          </p>
-                                                      </div>
-                                                  </div>
-                                              </a>
-                                          </Link>
-                                      </SwiperSlide>
-                                  </LazyLoad>
-                              );
-                          })
-                        : Array.from(Array(4).keys()).map((e) => {
-                              return (
-                                  <SwiperSlide
-                                      key={e}
-                                      className="absolute-center"
-                                  >
-                                      <a className="full-size">
-                                          <div className="full-size grid grid-cols-5 overflow-hidden rounded-xl bg-deep-black">
-                                              <figure className="relative col-span-1">
-                                                  <div className="loading-pulse full-size bg-white/20"></div>
-                                              </figure>
-                                              <div className="col-span-4 flex flex-col px-6 py-2 md:space-y-4">
-                                                  <div className="loading-pulse min-h-[30px] w-full rounded-xl bg-white/20"></div>
+                          <div className="loading-pulse my-4 min-h-[200px] w-full rounded-xl bg-white/20"></div>
+                        </div>
+                      </div>
+                    </a>
+                  </SwiperSlide>
+                );
+              })}
+        </Swiper>
+      </ClientOnly>
+    </div>
+  );
+};
 
-                                                  <div className="loading-pulse my-4 min-h-[200px] w-full rounded-xl bg-white/20"></div>
-                                              </div>
-                                          </div>
-                                      </a>
-                                  </SwiperSlide>
-                              );
-                          })}
-                </Swiper>
-            </ClientOnly>
-        </div>
-    );
-}
-
-export default memo(SeasonalComics);
+export default SeasonalComics;

@@ -1,32 +1,29 @@
 import { createContext, ReactNode, useContext } from 'react';
-import { Chapter, NavigateDirection, Page } from '~/types';
+import { IChapterData, NavigateDirection, Page } from '~/types';
 
-interface ReadingContextType {
-    images: Page[];
-    currentChapter?: Chapter;
-    useProxy?: boolean;
-    sourceId: string;
-    navigateChapter: (type: NavigateDirection) => void;
+interface ReadingContextIProps {
+  loading: boolean;
+  images: Page[];
+  currentChapter?: IChapterData;
+  navigateChapter: (type: NavigateDirection) => void;
 }
 
 interface ReadingContextProps {
-    children: ReactNode;
-    value: ReadingContextType;
+  children: ReactNode;
+  value: ReadingContextIProps;
 }
 
-const ReadingContext = createContext<ReadingContextType | null>(null);
+const ReadingContext = createContext<ReadingContextIProps | null>(null);
 
 export const ReadingContextProvider = ({
-    children,
-    value,
+  children,
+  value,
 }: ReadingContextProps) => {
-    return (
-        <ReadingContext.Provider value={value}>
-            {children}
-        </ReadingContext.Provider>
-    );
+  return (
+    <ReadingContext.Provider value={value}>{children}</ReadingContext.Provider>
+  );
 };
 
 export default function useReading() {
-    return useContext(ReadingContext);
+  return useContext(ReadingContext);
 }

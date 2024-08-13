@@ -1,46 +1,27 @@
 import { memo } from 'react';
-import dynamic from 'next/dynamic';
 import Section from '~/components/shared/Section';
-import { ViewSelection, Description } from '~/types';
+import { Description, ViewSelection } from '~/types';
 
-const Characters = dynamic(
-    () =>
-        import('~/components/shared/Characters', {
-            ssr: false,
-        } as ImportCallOptions),
-);
-
-const MalPictures = dynamic(
-    () =>
-        import('~/components/shared/MalPictures', {
-            ssr: false,
-        } as ImportCallOptions),
-);
-
-const MalDetails = dynamic(
-    () =>
-        import('~/components/shared/MalDetails', {
-            ssr: false,
-        } as ImportCallOptions),
-);
-
-interface DetailedCategory {
-    viewSelection: ViewSelection;
-    description: Description;
+interface IProps {
+  viewSelection: ViewSelection;
+  description?: Description;
 }
 
-function DetailedCategory({ viewSelection, description }: DetailedCategory) {
-    return (
-        <Section>
-            {viewSelection === 'Characters' && (
+function DetailedCategory({ viewSelection, description }: IProps) {
+  return (
+    <Section>
+      {viewSelection !== 'Chapters' && (
+        <span className="font-semibold text-white">No Data</span>
+      )}
+      {/* {viewSelection === 'Characters' && (
                 <Characters characters={description.characters} />
             )}
             {viewSelection === 'Details' && <MalDetails desc={description} />}
             {viewSelection === 'Pictures' && (
                 <MalPictures pictures={description.pictures} />
-            )}
-        </Section>
-    );
+            )} */}
+    </Section>
+  );
 }
 
 export default memo(DetailedCategory);

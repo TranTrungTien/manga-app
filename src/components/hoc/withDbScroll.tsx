@@ -2,26 +2,26 @@ import { ComponentType, FunctionComponent, ReactNode } from 'react';
 import { useEventListener } from 'usehooks-ts';
 
 type WithDbScroll<P> = FunctionComponent<P> & {
-    getLayout?: (page: ReactNode) => ReactNode;
+  getLayout?: (page: ReactNode) => ReactNode;
 };
 
 export default function withDbScroll<P>(
-    WrappedComponent: ComponentType<P>,
+  WrappedComponent: any, // ComponentType<P>,
 ): WithDbScroll<P> {
-    const ComponentWidthDoubleScrollToTop = (props: P) => {
-        const handleDbClick = () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth',
-            });
-        };
-
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEventListener('dblclick', handleDbClick);
-        return <WrappedComponent {...props} />;
+  const ComponentWidthDoubleScrollToTop = (props: P) => {
+    const handleDbClick = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     };
 
-    return ComponentWidthDoubleScrollToTop;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEventListener('dblclick', handleDbClick);
+    return <WrappedComponent {...props} />;
+  };
+
+  return ComponentWidthDoubleScrollToTop;
 }
 
 /* ref article:

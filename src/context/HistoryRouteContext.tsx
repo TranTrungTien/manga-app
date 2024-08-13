@@ -2,36 +2,34 @@ import { createContext, ReactNode, useContext, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 interface HsRouteContextType {
-    url: string | null;
+  url: string | null;
 }
 interface HsRouteContextProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 const HsRouteContext = createContext<HsRouteContextType | null>(null);
 
 export const HistoryRouteContextProvider = ({
-    children,
+  children,
 }: HsRouteContextProps) => {
-    const { asPath } = useRouter();
+  const { asPath } = useRouter();
 
-    const ref = useRef<string | null>(null);
+  const ref = useRef<string | null>(null);
 
-    useEffect(() => {
-        ref.current = asPath;
-    }, [asPath]);
+  useEffect(() => {
+    ref.current = asPath;
+  }, [asPath]);
 
-    const value = {
-        url: ref.current,
-    };
+  const value = {
+    url: ref.current,
+  };
 
-    return (
-        <HsRouteContext.Provider value={value}>
-            {children}
-        </HsRouteContext.Provider>
-    );
+  return (
+    <HsRouteContext.Provider value={value}>{children}</HsRouteContext.Provider>
+  );
 };
 
 export default function usePreviousRoute() {
-    return useContext(HsRouteContext);
+  return useContext(HsRouteContext);
 }
