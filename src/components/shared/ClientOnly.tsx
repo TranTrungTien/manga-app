@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 
 interface Props {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const ClientOnly: React.FC<Props> = ({ children }) => {
-    const [hasMounted, setHasMounted] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
-    useEffect(() => {
-        setHasMounted(true);
-    }, []);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
-    if (!hasMounted) {
-        return null;
-    }
+  if (!hasMounted) {
+    return null;
+  }
 
-    return <>{children}</>;
+  return <>{children}</>;
 };
 export default ClientOnly;

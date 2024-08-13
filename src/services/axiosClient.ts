@@ -7,27 +7,32 @@ export const baseURLv2 = `${process.env.NEXT_PUBLIC_BASE_URL_V2}/api/v2`;
 export const baseURLWordService = `${process.env.NEXT_PUBLIC_BASE_URL_WORDS_SERVICE}`;
 
 const axiosClient = axios.create({
-    baseURL,
-    headers: {
-        'content-type': 'application/json',
-    },
-    paramsSerializer: (params) => queryString.stringify(params),
+  baseURL,
+  headers: {
+    'content-type': 'application/json',
+  },
+  paramsSerializer: (params) => queryString.stringify(params),
 });
 
 export const axiosClientV2 = axios.create({
-    baseURL: baseURLv2,
-    headers: {
-        'content-type': 'application/json',
-    },
-    paramsSerializer: (params) => queryString.stringify(params),
+  baseURL: 'https://otruyenapi.com',
+  headers: {
+    'content-type': 'application/json',
+  },
+  timeout: 30000,
+  paramsSerializer: (params) => queryString.stringify(params),
 });
 
 export const axiosClientWordsService = axios.create({
-    baseURL: baseURLWordService,
-    headers: {
-        'content-type': 'application/json',
-    },
-    paramsSerializer: (params) => queryString.stringify(params),
+  baseURL: baseURLWordService,
+  headers: {
+    'content-type': 'application/json',
+  },
+  paramsSerializer: (params) => queryString.stringify(params),
+});
+
+axiosClientV2.interceptors.response.use((response) => {
+  return response.data;
 });
 
 export default axiosClient;

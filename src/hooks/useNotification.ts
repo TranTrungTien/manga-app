@@ -1,85 +1,84 @@
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useReadLocalStorage } from 'usehooks-ts';
 import useSubscription from '~/context/SubscriptionContext';
 import axiosClient from '~/services/axiosClient';
 
 export default function useNotification() {
-    const router = useRouter();
-    const sub = useSubscription();
-    const { data: session, status } = useSession();
-    const isSupportedSW = useReadLocalStorage('supportSW');
+  const router = useRouter();
+  const sub = useSubscription();
 
-    return {
-        info: async (comicId: string) => {
-            try {
-                const res = await (
-                    await axiosClient.post('notify/info', {
-                        comicId,
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        //@ts-ignore
-                        userId: session?.user?.id as string,
-                    })
-                ).data;
+  const isSupportedSW = useReadLocalStorage('supportSW');
 
-                if (res?.message === 'subscribed') return 'subscribed';
-                else return 'nonsub';
-            } catch (err) {
-                return 'nonsub';
-            }
-        },
+  return {
+    info: async (comicId: string) => {
+      try {
+        const res = await (
+          await axiosClient.post('notify/info', {
+            comicId,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            userId: session?.user?.id as string,
+          })
+        ).data;
 
-        subscribe: async (comicId: string) => {
-            if (!isSupportedSW) return 'unsupported_browser';
+        if (res?.message === 'subscribed') return 'subscribed';
+        else return 'nonsub';
+      } catch (err) {
+        return 'nonsub';
+      }
+    },
 
-            if (status === 'unauthenticated') {
-                router.push('/login');
-                return;
-            }
+    subscribe: async (comicId: string) => {
+      if (!isSupportedSW) return 'unsupported_browser';
 
-            if (Notification.permission !== 'granted') {
-                const result = await Notification.requestPermission();
-                if (result !== 'granted') return 'permission_denied';
-            }
+      if (status === 'unauthenticated') {
+        router.push('/login');
+        return;
+      }
 
-            try {
-                await axiosClient.post('notify/subscribe', {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    //@ts-ignore
-                    userId: session?.user?.id as string,
-                    endpoint: sub?.endpoint,
-                    p256dh: sub?.keys.p256dh,
-                    auth: sub?.keys.auth,
-                    comicId,
-                });
+      if (Notification.permission !== 'granted') {
+        const result = await Notification.requestPermission();
+        if (result !== 'granted') return 'permission_denied';
+      }
 
-                return 'success';
-            } catch (err) {
-                console.error('error subscribe:: ', err);
-            }
-        },
+      try {
+        await axiosClient.post('notify/subscribe', {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          userId: session?.user?.id as string,
+          endpoint: sub?.endpoint,
+          p256dh: sub?.keys.p256dh,
+          auth: sub?.keys.auth,
+          comicId,
+        });
 
-        unsubscribe: async (comicId: string) => {
-            if (status === 'unauthenticated') {
-                router.push('/login');
-                return;
-            }
+        return 'success';
+      } catch (err) {
+        console.error('error subscribe:: ', err);
+      }
+    },
 
-            try {
-                await axiosClient.delete(`notify/unsubscribe`, {
-                    data: {
-                        comicId,
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        //@ts-ignore
-                        userId: session?.user?.id as string,
-                    },
-                });
+    unsubscribe: async (comicId: string) => {
+      if (status === 'unauthenticated') {
+        router.push('/login');
+        return;
+      }
 
-                return 'success';
-            } catch (err) {
-                console.error('error unsubscribe:: ', err);
-                return 'error';
-            }
-        },
-    };
+      try {
+        await axiosClient.delete(`notify/unsubscribe`, {
+          data: {
+            comicId,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            userId: session?.user?.id as string,
+          },
+        });
+
+        return 'success';
+      } catch (err) {
+        console.error('error unsubscribe:: ', err);
+        return 'error';
+      }
+    },
+  };
 }
