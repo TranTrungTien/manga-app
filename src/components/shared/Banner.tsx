@@ -3,7 +3,7 @@ import 'swiper/css/effect-fade';
 
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { memo, MouseEvent } from 'react';
+import { MouseEvent } from 'react';
 import { Autoplay, EffectFade } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useMediaQuery } from 'usehooks-ts';
@@ -98,7 +98,7 @@ const Banner = ({ comics }: IProps) => {
                     <h1 className="line-clamp-1 text-3xl transition-all hover:text-primary md:min-h-[30px] md:text-6xl">
                       {comic?.name}
                     </h1>
-                    <h5 className="line-clamp-3 text-sm md:min-h-[60px] md:text-2xl">
+                    <h5 className="line-clamp-3 text-sm md:text-2xl">
                       {comic?.origin_name?.[0]}
                     </h5>
                     <ul className="hidden space-x-4 text-lg md:flex">

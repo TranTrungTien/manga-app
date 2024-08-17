@@ -2,17 +2,17 @@ import NextHead from 'next/head';
 import { WEBSITE_URL } from '~/constants';
 import { useRouter } from 'next/router';
 
-interface HeadProps {
+interface IProps {
   title?: string;
   description?: string;
   image?: string;
 }
 
 export default function Head({
-  title = 'Kyoto Manga',
+  title = 'Manga World',
   description = 'Website đọc truyện tranh miễn phí!',
   image = 'https://i.ibb.co/vBCzhGX/kyt-manga.png',
-}: HeadProps) {
+}: Readonly<IProps>) {
   const { asPath } = useRouter();
 
   return (
@@ -37,8 +37,8 @@ export default function Head({
 
       <meta name="mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="application-name" content="Kyoto Manga" />
-      <meta name="apple-mobile-web-app-title" content="Kyoto Manga" />
+      <meta name="application-name" content="Manga World" />
+      <meta name="apple-mobile-web-app-title" content="Manga World" />
       <meta name="theme-color" content="#f43f5e" />
       <meta name="msapplication-navbutton-color" content="#f43f5e" />
       <meta

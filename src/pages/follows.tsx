@@ -58,7 +58,7 @@ const FollowPage: NextPage = () => {
   // ${session?.user?.name}
   return (
     <>
-      <Head title="Theo dõi - | Kyoto Manga" />
+      <Head title="Theo dõi - | Manga World" />
       <ClientOnly>
         <Container>
           <Section

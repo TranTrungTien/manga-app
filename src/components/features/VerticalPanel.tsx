@@ -22,6 +22,7 @@ import {
 import TextLogo from '../icons/TextLogo';
 import DetailsChapterList from '../shared/DetailsChapterList';
 import ListBox from '../shared/ListBox';
+import Image from 'next/image';
 
 interface IProps {
   handleClose: () => void;
@@ -69,18 +70,17 @@ function SettingsSide({ handleClose }: IProps) {
           </a>
         </Link>
 
-        <Link href="/">
-          <a className="absolute-center relative flex-1">
-            <LogoSVG
-              className="md:width-[100px] absolute"
-              width={50}
-              height={50}
+        <figure className="relative h-fit flex-1">
+          <Link href="/">
+            <Image
+              src="/images/logo-bottom.png"
+              alt="logo top"
+              width={250}
+              height={100}
+              objectFit="contain"
             />
-            <figure className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-              <TextLogo className="left-1/2 h-[40px] w-[130px]" />
-            </figure>
-          </a>
-        </Link>
+          </Link>
+        </figure>
         <button
           onClick={handleCloseSideSettings}
           className="rounded-full p-4 transition-all hover:bg-white/25"

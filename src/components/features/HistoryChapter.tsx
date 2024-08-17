@@ -171,7 +171,7 @@ function ReadingHistoryModal() {
                   </div>
                   <div className="mx-2 my-4 flex h-fit w-full flex-col gap-4 text-white/60">
                     <h1 className="text-center">
-                      Kyoto Manga đã giúp bạn lưu lại chap
+                      Manga World đã giúp bạn lưu lại chap
                       <span className="text-white">{previousChapter}</span>{' '}
                       trước đó
                     </h1>

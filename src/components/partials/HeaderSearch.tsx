@@ -16,7 +16,7 @@ export default function HeaderSearch({ styles }: HeaderSearchProps) {
 
   return (
     <div
-      className={`${styles} ml-16 flex h-[40%] w-fit items-center justify-between rounded-2xl  bg-highlight text-white lg:w-[68%]`}
+      className={`${styles} flex h-[40%] w-fit items-center justify-between rounded-2xl bg-highlight  text-white md:ml-16 lg:w-[68%]`}
     >
       {/* advanced search  */}
       <button className="mx-4 hidden rounded-xl bg-rose-300 px-2 py-1 text-rose-600 transition-all hover:bg-rose-500 hover:text-white/80 md:block">

@@ -1,4 +1,4 @@
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import useSWR from 'swr';
 import Filters from '~/components/features/Filters';
 import Pagination from '~/components/features/Pagination';
@@ -6,10 +6,9 @@ import withDbScroll from '~/components/hoc/withDbScroll';
 import Head from '~/components/shared/Head';
 import ListView from '~/components/shared/ListView';
 import Section from '~/components/shared/Section';
-import { COMIC_GENRES, GENRES_NT, REVALIDATE_TIME } from '~/constants';
-import axiosClient, { axiosClientV2 } from '~/services/axiosClient';
+import { axiosClientV2 } from '~/services/axiosClient';
 import { QueryObject } from '~/services/nettruyenRepository';
-import { Comic, Manga } from '~/types';
+import { Comic } from '~/types';
 
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
@@ -22,43 +21,53 @@ interface IProps {
 const BrowsePage: NextPage<IProps> = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const { data: comicsByGenres, error } = useSWR<{
+  const { data: comicsByGenres } = useSWR<{
     data: Comic[];
     pagination: any;
-  } | null>(`get-comic-by-genres-${router.query?.genres}`, async () => {
-    if (!router.query.genres) {
+  } | null>(
+    `get-comic-by-genres-${router.query?.genres}-${router.query?.page}`,
+    async () => {
+      if (!router.query.genres) {
+        setLoading(false);
+        return null;
+      }
+      setLoading(true);
+
+      const { data } = await axiosClientV2.get(
+        `/v1/api/the-loai/${router.query?.genres}?page=${
+          router.query.page || 1
+        }`,
+      );
+
       setLoading(false);
-      return null;
-    }
-    setLoading(true);
-
-    const { data } = await axiosClientV2.get(
-      `/v1/api/the-loai/${router.query?.genres}?page=${router.query.page || 1}`,
-    );
-
-    setLoading(false);
-    return {
-      data: data?.items || [],
-      pagination: data?.params?.pagination,
-    };
-  });
+      return {
+        data: data?.items || [],
+        pagination: data?.params?.pagination,
+      };
+    },
+  );
   const { data: comicsByStatus } = useSWR<{
     data: Comic[];
     pagination: any;
-  } | null>(`get-comic-by-status-${router.query?.status}`, async () => {
-    if (!router.query.status) {
+  } | null>(
+    `get-comic-by-status-${router.query?.status}-${router.query?.page}`,
+    async () => {
+      if (!router.query.status) {
+        setLoading(false);
+        return null;
+      }
+      const { data } = await axiosClientV2.get(
+        `/v1/api/danh-sach/${router.query.status}?page=${
+          router.query.page || 1
+        }`,
+      );
       setLoading(false);
-      return null;
-    }
-    const { data } = await axiosClientV2.get(
-      `/v1/api/danh-sach/${router.query.status}?page=${router.query.page || 1}`,
-    );
-    setLoading(false);
-    return {
-      data: data?.items || [],
-      pagination: data?.params?.pagination,
-    };
-  });
+      return {
+        data: data?.items || [],
+        pagination: data?.params?.pagination,
+      };
+    },
+  );
 
   const getTotalPages = () => {
     let pages = comicsByGenres?.pagination?.totalItems || 1;
@@ -76,13 +85,13 @@ const BrowsePage: NextPage<IProps> = () => {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Head title="Danh sách truyện - Kyoto Manga" />
+      <Head title="Danh sách truyện - Manga World" />
 
       <Section style="z-10 mx-auto min-h-fit w-[98%] md:w-[90%]">
         <Filters />
       </Section>
 
-      {(!comicsByGenres || !comicsByStatus) && (
+      {!loading && (!comicsByGenres || !comicsByStatus) && (
         <>
           <Section style="my-4 z-0 mx-auto min-h-[900px] w-[98%]   md:w-[90%]">
             <ListView

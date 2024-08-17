@@ -1,9 +1,6 @@
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { memo, RefObject } from 'react';
 import AuthorItem from './AuthorItem';
-import useSWR from 'swr';
-import { useAutoAnimate } from '@formkit/auto-animate/react';
-import axios from 'axios';
-import { Author } from '~/types';
 
 function AuthorList() {
   const animationParent = useAutoAnimate({}) as RefObject<HTMLUListElement>;

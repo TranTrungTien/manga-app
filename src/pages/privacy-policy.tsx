@@ -13,7 +13,7 @@ const PrivacyPolicyPage: NextPage = () => {
           Quyền riêng tư của bạn rất quan trọng với chúng tôi.
         </h1>
         <p className="lg:w-1/2">
-          Chính sách của Kyoto Manga là tôn trọng quyền riêng tư của bạn liên
+          Chính sách của Manga World là tôn trọng quyền riêng tư của bạn liên
           quan đến bất kỳ thông tin nào mà chúng tôi có thể thu thập khi vận
           hành trang web của mình. Theo đó, chúng tôi đã phát triển chính sách
           bảo mật này để bạn hiểu cách chúng tôi thu thập, sử dụng, giao tiếp,

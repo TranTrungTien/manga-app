@@ -1,8 +1,5 @@
-import TextLogo from '../icons/TextLogo';
-import LogoSVG from '/public/images/torii-gate-japan.svg';
+import Image from 'next/image';
 import Link from 'next/link';
-
-import { FaFacebookSquare, FaDiscord } from 'react-icons/fa';
 
 import { useMediaQuery } from 'usehooks-ts';
 
@@ -11,16 +8,20 @@ export default function Footer() {
 
   return (
     <footer className="my-6 bg-background pb-6 text-white">
-      <figure className="relative flex min-h-[150px] w-full items-center justify-center">
-        <TextLogo className="z-10 h-[40px] w-[130px] fill-white md:h-[50px] md:w-[200px]" />
-        <LogoSVG
-          className="absolute z-0"
-          width={matchesMobile ? 90 : 120}
-          height={matchesMobile ? 90 : 120}
-        />
-      </figure>
+      <div className="flex flex-col items-center justify-center md:flex-row">
+        <figure className="relative h-fit">
+          <Link href="/">
+            <Image
+              src="/images/logo-bottom.png"
+              alt="logo top"
+              width={250}
+              height={100}
+              objectFit="contain"
+            />
+          </Link>
+        </figure>
 
-      <div className="absolute-center mb-4 w-full space-x-6">
+        {/* <div className="absolute-center mb-4 w-full space-x-6">
         <button className="transition-all duration-200 hover:text-primary">
           <a
             href="https://www.facebook.com/kyotomanga"
@@ -40,41 +41,42 @@ export default function Footer() {
             <FaDiscord className="h-8 w-8" />
           </a>
         </button>
-      </div>
+      </div> */}
 
-      <div className="mx-auto flex w-[70%] flex-col justify-center space-y-4 text-lg md:text-2xl">
-        <h1 className="text-center font-secondary text-2xl font-bold md:text-4xl">
-          Kyoto Manga là website đọc truyện tranh miễn phí
-        </h1>
-        <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:space-x-8 md:text-2xl">
-          <Link href="/terms-of-service">
-            <a className="hover:text-primary">Điều khoản dịch vụ</a>
-          </Link>
-          <Link href="/privacy-policy">
-            <a className="hover:text-primary">Chính sách riêng tư</a>
-          </Link>
-          <Link href="/dmca">
-            <a className="hover:text-primary">DMCA</a>
-          </Link>
-          <Link href="/contact">
-            <a className="hover:text-primary">Liên hệ</a>
-          </Link>
+        <div className="flex flex-col justify-center space-y-4 text-lg md:text-2xl">
+          <h2 className="text-center font-secondary text-2xl font-bold md:text-4xl">
+            Manga World là website đọc truyện tranh miễn phí
+          </h2>
+          <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:space-x-8 md:text-2xl">
+            <Link href="/terms-of-service">
+              <a className="hover:text-primary">Điều khoản dịch vụ</a>
+            </Link>
+            <Link href="/privacy-policy">
+              <a className="hover:text-primary">Chính sách riêng tư</a>
+            </Link>
+            <Link href="/dmca">
+              <a className="hover:text-primary">DMCA</a>
+            </Link>
+            <Link href="/contact">
+              <a className="hover:text-primary">Liên hệ</a>
+            </Link>
+          </div>
         </div>
       </div>
 
-      <div className="mx-auto my-4 w-[70%] space-y-4 lg:w-1/2">
+      <div className="mx-auto my-4 space-y-4">
         <p className="text-center text-lg text-white/40 md:text-2xl">
-          Kyoto Manga không lưu trữ bất kì tệp tin nào trên máy chủ, chúng tôi
+          Manga World không lưu trữ bất kì tệp tin nào trên máy chủ, chúng tôi
           chỉ liên kết tới những phương tiện truyền thông được lưu trữ bên dịch
           vụ thứ 3.
         </p>
         <p className="text-center text-lg text-white/40 md:text-2xl">
-          Kyoto Manga does not store any files on our server, we only linked to
+          Manga World does not store any files on our server, we only linked to
           the media which is hosted on 3rd party services.
         </p>
 
         <p className="text-center text-lg text-white/40 md:text-2xl">
-          &copy; Kyotomanga.live
+          &copy; Manga World
         </p>
       </div>
     </footer>

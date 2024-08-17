@@ -17,6 +17,7 @@ import TextLogo from '../icons/TextLogo';
 import { axiosClientV2 } from '~/services/axiosClient';
 import useSWR from 'swr';
 import { DropDownLink } from '../shared/DropDown';
+import Image from 'next/image';
 
 export default function Sidebar() {
   const [showSidebar, setShowSidebar] = useAtom(sidebarState);
@@ -74,24 +75,25 @@ export default function Sidebar() {
       >
         <div className="flex h-full w-full flex-col">
           {/* control sidebar & logo */}
-          <div className="absolute-center mt-6 flex h-fit w-full items-center justify-between">
+          <div className="absolute-center flex h-fit w-full items-start justify-between">
             <button
-              className="absolute-center bg-hight-light ml-4 rounded-full p-4 text-white md:p-5"
+              className="absolute-center bg-hight-light rounded-full p-4 text-white md:p-5"
               onClick={handleSidebarClose}
             >
               <ChevronLeftIcon className="h-8 w-8 md:h-10 md:w-10" />
             </button>
 
-            <div className="absolute-center relative flex-1">
-              <LogoSVG
-                className="md:width-[100px] absolute"
-                width={50}
-                height={50}
-              />
-              <figure className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                <TextLogo className="left-1/2 h-[40px] w-[130px] md:h-[50px] md:w-[200px]" />
-              </figure>
-            </div>
+            <figure className="relative grid h-fit flex-1 place-content-start">
+              <Link href="/">
+                <Image
+                  src="/images/logo-top.png"
+                  alt="logo top"
+                  width={150}
+                  height={50}
+                  objectFit="contain"
+                />
+              </Link>
+            </figure>
           </div>
           {/* sidebar list  */}
           <ul className="mt-4 h-full w-full text-white">
