@@ -134,7 +134,7 @@ const DetailsPage = () => {
   return (
     <>
       <Head
-        title={`${comic?.name || 'Comic'} | Kyoto Manga`}
+        title={`${comic?.name || 'Comic'} | Manga World`}
         description={`${comic?.content || 'Comic'}`}
         image={`${comic?.thumb_url || ''}`}
       />
@@ -300,7 +300,7 @@ DetailsPage.getLayout = (page: ReactNode) => {
     <MainLayout
       showHeader
       showFooter
-      customStyleHeader="w-full h-40 absolute top-[-10px] z-50 left-1/2 -translate-x-1/2 bg-transparent"
+      customStyleHeader="w-full h-32 md:h-40 absolute top-[-10px] z-50 left-1/2 -translate-x-1/2 bg-transparent"
     >
       {page}
     </MainLayout>

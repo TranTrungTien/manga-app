@@ -1,26 +1,19 @@
 import 'tippy.js/animations/scale.css';
 import 'tippy.js/dist/tippy.css';
 
+import styled from '@emotion/styled';
+import { BookOpenIcon, DocumentTextIcon } from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 import { useAtomValue } from 'jotai';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ComponentType, memo, useEffect, useRef, useState } from 'react';
+import { ComponentType, useEffect, useRef, useState } from 'react';
 import { Virtuoso, VirtuosoGrid } from 'react-virtuoso';
 import { animateFill, followCursor } from 'tippy.js';
 import { mangaSources } from '~/atoms/mangaSourcesAtom';
-import { mangaSrc } from '~/atoms/mangaSrcAtom';
 import { MANGA_PATH_NAME, MANGA_PATH_READ_NAME } from '~/constants';
-import {
-  Chapter,
-  ChapterDetails,
-  Comic,
-  IChapterData,
-  IServerData,
-} from '~/types';
-import Link from 'next/link';
-import styled from '@emotion/styled';
-import { BookOpenIcon, DocumentTextIcon } from '@heroicons/react/24/solid';
+import { Comic, IServerData } from '~/types';
 
 import ChapterInput from './ChapterInput';
 import LazyTippy from './LazyTippy';

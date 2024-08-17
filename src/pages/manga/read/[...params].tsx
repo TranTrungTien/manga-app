@@ -266,7 +266,7 @@ const ReadPage: NextPage<IProps> = () => {
   return (
     <>
       <Head
-        title={`${comicDetail?.name || 'Comic'} | Kyoto Manga`}
+        title={`${comicDetail?.name || 'Comic'} | Manga World`}
         // image={pagesDetail.pages[0].src || pagesDetail.pages[0].fallbackSrc}
       />
 

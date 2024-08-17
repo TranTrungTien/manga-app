@@ -1,13 +1,13 @@
-import { memo, useState, useEffect } from 'react';
 import {
   ArrowSmallDownIcon,
   ArrowSmallUpIcon,
 } from '@heroicons/react/24/outline';
+import { memo, useState } from 'react';
+import toast from 'react-hot-toast';
 import useSWR from 'swr';
+import { useCountdown } from 'usehooks-ts';
 import { axiosClientV2 } from '~/services/axiosClient';
 import { Comic } from '~/types';
-import { useCountdown } from 'usehooks-ts';
-import toast from 'react-hot-toast';
 
 interface VoteProps {
   comicName: string;

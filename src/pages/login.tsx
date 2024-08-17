@@ -14,7 +14,7 @@ const LoginPage: NextPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-white">
-      <Head title="Đăng nhập - Kyoto Manga" />
+      <Head title="Đăng nhập - World Manga" />
 
       <div className="absolute-center mx-auto h-screen w-full md:w-3/4">
         <div className="flex h-[450px] w-[300px] flex-col rounded-2xl bg-black/40 shadow-xl md:h-[550px] md:w-[400px]">

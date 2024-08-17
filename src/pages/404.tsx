@@ -49,7 +49,7 @@ function NotFoundPage() {
             className="mt-4 rounded-xl border-2 border-white p-6 transition-all hover:border-none hover:bg-primary hover:text-white"
           >
             <Link href={`${hsRouteCtx?.url ? hsRouteCtx?.url : '/'}`}>
-              <a> Theo Zoro về vùng đất Kyoto Manga</a>
+              <a> Theo Zoro về vùng đất Manga World</a>
             </Link>
           </button>
         </div>

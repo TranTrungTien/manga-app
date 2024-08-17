@@ -18,6 +18,7 @@ import HeaderUser from './HeaderUser';
 import useSocket from '~/context/SocketContext';
 import useSWR from 'swr';
 import { axiosClientV2 } from '~/services/axiosClient';
+import Image from 'next/image';
 
 interface IProps {
   style?: string;
@@ -59,25 +60,24 @@ const Header = ({ style }: Readonly<IProps>) => {
       <div className="mx-auto flex h-full w-full items-center md:max-w-[644px] lg:max-w-[90%]">
         {/* menu button mobile */}
         <button
-          className="button mx-6 rounded-full p-4 md:m-0 lg:hidden"
+          className="button rounded-full p-4 md:m-0 lg:hidden"
           onClick={handleOpenSidebar}
         >
           <HiMenuAlt2 className=" text-4xl text-white" />
         </button>
 
         {/* logo */}
-        <div className="relative flex h-full w-56 flex-1 items-center md:w-80 md:px-6 lg:px-0 lg:pl-6">
-          <figure className="absolute z-10 text-4xl font-semibold text-white md:text-5xl">
-            <Link href="/">
-              <a>
-                <TextLogo className="h-[40px] w-[130px] fill-white md:h-[50px] md:w-[200px]" />
-              </a>
-            </Link>
-          </figure>
-          <div className="absolute left-10 top-auto z-0">
-            <LogoSVG width={50} height={50} />
-          </div>
-        </div>
+        <figure className="relative grid h-fit flex-1 place-content-center md:place-content-start">
+          <Link href="/">
+            <Image
+              src="/images/logo-top.png"
+              alt="logo top"
+              width={250}
+              height={100}
+              objectFit="contain"
+            />
+          </Link>
+        </figure>
 
         <div className="flex items-center">
           {/* navigation */}
@@ -156,7 +156,7 @@ const Header = ({ style }: Readonly<IProps>) => {
             </ul>
           </nav>
           {/* search & notifications & user */}
-          <div className="relative ml-10 flex h-full flex-1 items-center justify-end md:justify-between lg:ml-0">
+          <div className="relative flex h-full flex-1 items-center justify-end md:ml-10 md:justify-between lg:ml-0">
             {/* search  */}
             <HeaderSearch />
 
@@ -193,9 +193,9 @@ const Header = ({ style }: Readonly<IProps>) => {
             />
 
             {/* user  */}
-            <div className="absolute-center mx-4 h-full w-24">
+            {/* <div className="absolute-center mx-4 h-full w-24">
               <HeaderUser />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

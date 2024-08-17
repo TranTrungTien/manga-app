@@ -1,5 +1,4 @@
 import { memo, useEffect } from 'react';
-import { SOURCE_COLLECTIONS } from '~/constants';
 import useSettingsMode from '~/context/SettingsContext';
 import { Page } from '~/types';
 

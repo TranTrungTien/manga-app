@@ -7,7 +7,7 @@ class MyDocument extends Document {
         <Head>
           <meta httpEquiv="Cache-Control" content="max-age=200" />
           <link rel="shortcut icon" href="/favicon.ico" />
-          <link rel="icon" href="/favicon.ico" type="image/ico" />
+          <link rel="icon" href="/browser-icon.ico" type="image/ico" />
         </Head>
         <body>
           <Main />
