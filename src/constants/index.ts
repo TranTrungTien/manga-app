@@ -23,7 +23,7 @@ export const DEFAULT_SRC: SourcesId = 'NTC';
 
 export const PROXY_SERVER = process.env.NEXT_PUBLIC_PROXY_SERVER;
 
-// export const WEBSITE_URL = 'https://kyotomanga.live';
+export const WEBSITE_URL = 'https://mangaworld.com';
 
 export const SOURCE_COLLECTIONS: { [key: string]: string } = {
   NTC: 'https://www.nettruyenco.vn',

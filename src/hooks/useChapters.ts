@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import NProgress from 'nprogress';
 import { MANGA_PATH_NAME, MANGA_PATH_READ_NAME } from '~/constants';
 import { axiosClientV2 } from '~/services/axiosClient';
 
