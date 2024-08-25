@@ -1,126 +1,51 @@
 import { Toaster } from 'react-hot-toast';
 import LazyLoad from 'react-lazy-load';
-import useSWR from 'swr';
 import RandomComics from '~/components/features/RandomComics';
 import ColumnSection from '~/components/shared/ColumnSection';
 import Head from '~/components/shared/Head';
 import Section from '~/components/shared/Section';
 import { MANGA_BROWSE_PAGE, MangaTypesPreview } from '~/constants';
-import { axiosClientV2 } from '~/services/axiosClient';
-import { Comic } from '~/types';
+import { baseURL } from '~/services/axiosClient';
+import { IComicDetail, IManga, RootPage } from '~/types';
 
 import type { NextPage } from 'next';
+import Banner from '~/components/shared/Banner';
+import ClientOnly from '~/components/shared/ClientOnly';
 import SeasonalComics from '~/components/shared/SeasonalComics';
 import SectionSwiper from '~/components/shared/SectionSwiper';
-import ClientOnly from '~/components/shared/ClientOnly';
-import Banner from '~/components/shared/Banner';
 import shuffle from '~/utils/randomArray';
-
-const onErrorRetry = (
-  error: any,
-  _: any,
-  __: any,
-  revalidate: (param: any) => void,
-  { retryCount }: { retryCount: number },
-) => {
-  // Never retry on 404.
-  if (error.status === 404) return;
-
-  // Only retry up to 1 time.
-  if (retryCount >= 1) return;
-
-  // Retry after 2 seconds.
-  setTimeout(() => revalidate({ retryCount }), 2000);
-};
 interface IProps {
-  topAllManga: Comic[];
-  topMonthManga: Comic[];
-  topWeekManga: Comic[];
-  topDayManga: Comic[];
-  seasonalComics: Comic[];
+  mangaUpdatedPage: RootPage;
+  newReleasePage: RootPage;
+  newMangaPage: RootPage;
+  releasingMangaPage: RootPage;
+  completedMangaPage: RootPage;
+  mangaPage: RootPage;
+  randomManga: IComicDetail;
 }
 
-const Home: NextPage<IProps> = () => {
+const Home: NextPage<IProps> = (props) => {
+  const {
+    completedMangaPage,
+    mangaUpdatedPage,
+    newMangaPage,
+    newReleasePage,
+    releasingMangaPage,
+    mangaPage,
+    randomManga,
+  } = props;
+
+  const comicsNewUpdated = mangaUpdatedPage?.data?.items || [];
+  const comicsNewRelease = newReleasePage?.data?.items || [];
+  const newComic = newMangaPage?.data?.items || [];
+  const releasingComic = releasingMangaPage?.data?.items || [];
+  const completedComic = completedMangaPage?.data?.items || [];
+  const mangas = mangaPage?.data?.items || [];
+
   // const [showRecommendedComics, setShowRecommendedComics] = useLocalStorage(
   //   'showVoting',
   //   false,
   // );
-  const { data: comicsNewUpdated } = useSWR(
-    'newUpdated',
-    async () => {
-      const { data } = await axiosClientV2.get(`/v1/api/home`);
-      const { items: comics } = data;
-      if (comics?.length) {
-        return comics;
-      }
-      return [];
-    },
-    {
-      onErrorRetry: onErrorRetry,
-    },
-  );
-  const { data: comicsNewRelease } = useSWR(
-    'newRelease',
-    async () => {
-      const { data } = await axiosClientV2.get(`/v1/api/danh-sach/sap-ra-mat`);
-      const { items: comics } = data;
-      if (comics?.length) {
-        return comics;
-      }
-      return [];
-    },
-    {
-      onErrorRetry: onErrorRetry,
-    },
-  );
-
-  const { data: newComic } = useSWR(
-    'newComic',
-    async () => {
-      const { data } = await axiosClientV2.get(`/v1/api/danh-sach/truyen-moi`);
-      const { items: comics } = data;
-      if (comics?.length) {
-        return comics;
-      }
-      return [];
-    },
-    {
-      onErrorRetry: onErrorRetry,
-    },
-  );
-
-  const { data: releasingComic } = useSWR(
-    'releasingComic',
-    async () => {
-      const { data } = await axiosClientV2.get(
-        `/v1/api/danh-sach/dang-phat-hanh`,
-      );
-
-      const { items: comics } = data;
-      if (comics?.length) {
-        return comics;
-      }
-      return [];
-    },
-    {
-      onErrorRetry: onErrorRetry,
-    },
-  );
-
-  const { data: completedComic } = useSWR(
-    'completedComic',
-    async () => {
-      const { data } = await axiosClientV2.get(`/v1/api/danh-sach/hoan-thanh`);
-      const { items: comics } = data;
-      if (comics?.length) {
-        return comics;
-      }
-      return [];
-    },
-    {
-      onErrorRetry: onErrorRetry,
-    },
-  );
 
   // const { data: recommendedComics } = useSWR<
   //   { _id: Comic; votes: string[]; size: number }[]
@@ -134,24 +59,25 @@ const Home: NextPage<IProps> = () => {
   //   setShowRecommendedComics(state);
   // };
 
+  const bannerManga = shuffle<IManga>(
+    ([] as IManga[])
+      .concat(
+        comicsNewUpdated,
+        comicsNewRelease,
+        newComic,
+        releasingComic,
+        completedComic,
+      )
+      .slice(0, 5),
+  );
+
   return (
     <>
       <Head />
-
       <Toaster position="top-center" />
-
       <div className="flex h-fit min-h-screen flex-col">
         <ClientOnly>
-          <Banner
-            comics={shuffle<Comic>(
-              [
-                ...(comicsNewUpdated || []),
-                ...(newComic || []),
-                ...(releasingComic || []),
-                ...(completedComic || []),
-              ].slice(0, 5),
-            )}
-          />
+          <Banner comics={bannerManga} />
         </ClientOnly>
 
         <Section
@@ -206,15 +132,13 @@ const Home: NextPage<IProps> = () => {
             title="Manga"
             style="w-[90%] mx-auto w-max-[1300px] mt-6 overflow-x-hidden"
           >
-            <SeasonalComics />
+            <SeasonalComics mangas={mangas} />
           </Section>
         </LazyLoad>
 
         <LazyLoad>
           <Section style="w-[90%] mx-auto w-max-[1300px] mt-6 overflow-x-hidden">
-            <RandomComics
-              id={comicsNewUpdated?.[comicsNewUpdated?.length - 1]?.['slug']}
-            />
+            <RandomComics manga={randomManga?.data?.item} />
           </Section>
         </LazyLoad>
 
@@ -269,34 +193,70 @@ const Home: NextPage<IProps> = () => {
   );
 };
 
-// export const getStaticProps: GetStaticProps = async () => {
-//   const { db } = await connectToDatabase();
+const URLs = {
+  home: `${baseURL}/v1/api/home`,
+  newRelease: `${baseURL}/v1/api/danh-sach/sap-ra-mat`,
+  newManga: `${baseURL}/v1/api/danh-sach/truyen-moi`,
+  releasingManga: `${baseURL}/v1/api/danh-sach/dang-phat-hanh`,
+  completedManga: `${baseURL}/v1/api/danh-sach/hoan-thanh`,
+  manga: `${baseURL}/v1/api/the-loai/manga?page=1`,
+};
 
-//   const [resultAll, resultMonth, resultWeek, resultDay, resultSeason] =
-//       await Promise.all([
-//           db.collection('real_time_comics').findOne({ type: 'all' }),
-//           db.collection('real_time_comics').findOne({ type: 'month' }),
-//           db.collection('real_time_comics').findOne({ type: 'week' }),
-//           db.collection('real_time_comics').findOne({ type: 'day' }),
-//           db.collection('real_time_comics').findOne({ type: 'season' }),
-//       ]);
+const fetchAPI = async (
+  url: string,
+  options?: RequestInit,
+): Promise<RootPage | null> => {
+  try {
+    const data = await (await fetch(url, options)).json();
+    return data;
+  } catch (error) {
+    console.error('error', error);
+    return null;
+  }
+};
 
-//   const { comics: topAllManga } = resultAll;
-//   const { comics: topMonthManga } = resultMonth;
-//   const { comics: topWeekManga } = resultWeek;
-//   const { comics: topDayManga } = resultDay;
-//   const { comics: seasonalComics } = resultSeason;
+const reduceData = async (url: string) => {
+  const data = await fetchAPI(url);
+  if (!data) return null;
 
-//   return {
-//     props: {
-//       topAllManga: JSON.parse(JSON.stringify(topAllManga)),
-//       topMonthManga: JSON.parse(JSON.stringify(topMonthManga)),
-//       topWeekManga: JSON.parse(JSON.stringify(topWeekManga)),
-//       topDayManga: JSON.parse(JSON.stringify(topDayManga)),
-//       seasonalComics: JSON.parse(JSON.stringify(seasonalComics)),
-//     },
-//     revalidate: REVALIDATE_TIME,
-//   };
-// };
+  data.data.items = data?.data?.items?.slice(0, 10) || [];
+
+  return data;
+};
+
+export const getServerSideProps = async ({ res }: any) => {
+  const mangaUpdatedPage = await reduceData(URLs.home);
+  const newReleasePage = await reduceData(URLs.newRelease);
+  const newMangaPage = await reduceData(URLs.newManga);
+  const releasingMangaPage = await reduceData(URLs.releasingManga);
+  const completedMangaPage = await reduceData(URLs.completedManga);
+  const mangaPage = await reduceData(URLs.manga);
+
+  const randomMangaObject =
+    mangaUpdatedPage?.data.items[
+      Math.floor(Math.random() * mangaUpdatedPage?.data.items.length)
+    ];
+
+  const randomManga = await fetchAPI(
+    `${baseURL}/v1/api/truyen-tranh/${randomMangaObject?.slug}`,
+  );
+
+  res.setHeader(
+    'cache-control',
+    'private, max-age=900, stale-while-revalidate=3600',
+  );
+
+  return {
+    props: {
+      mangaUpdatedPage,
+      newReleasePage,
+      newMangaPage,
+      releasingMangaPage,
+      completedMangaPage,
+      mangaPage,
+      randomManga,
+    },
+  };
+};
 
 export default Home;

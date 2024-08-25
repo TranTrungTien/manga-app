@@ -6,35 +6,25 @@ import 'swiper/css/pagination';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-import { memo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { FaRandom } from 'react-icons/fa';
 import { EffectFade, Mousewheel, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import useSWR from 'swr';
 import { useMediaQuery } from 'usehooks-ts';
 import { MANGA_PATH_DETAILS_NAME, MANGA_PATH_NAME } from '~/constants';
-import useChapters from '~/hooks/useChapters';
-import { axiosClientV2 } from '~/services/axiosClient';
 import { Comic } from '~/types';
 import { removeHTMLTags } from '~/utils/stringHandler';
 
 const SwiperButton = dynamic(() => import('../buttons/SwiperButton'));
 
 type IProps = {
-  id: string;
+  manga: Comic;
 };
 
-const RandomComics = ({ id }: IProps) => {
+const RandomComics = ({ manga }: IProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const matchesTablet = useMediaQuery('(min-width: 768px)');
   const slideContainerRef = useRef<HTMLDivElement | null>(null);
-
-  const { data: comic } = useSWR<Comic>(id, async (query) => {
-    const { data } = await axiosClientV2.get(`/v1/api/truyen-tranh/${query}`);
-    const { item: comic } = data;
-    setIsLoading(false);
-    return comic;
-  });
 
   return (
     <div className="flex h-fit w-full flex-col text-white">
@@ -79,23 +69,23 @@ const RandomComics = ({ id }: IProps) => {
             )}
           </div>
 
-          {comic && !isLoading && (
+          {manga && !isLoading && (
             <SwiperSlide
-              key={comic?._id}
+              key={manga?._id}
               className="flex h-full w-full items-center"
             >
               <div className="flex h-3/4 w-[60%] flex-col space-y-2 px-4 md:space-y-4 md:py-6">
                 <h1 className="my-2 line-clamp-1 min-h-max font-secondary text-3xl md:text-4xl lg:text-5xl">
-                  {comic?.name}
+                  {manga?.name}
                 </h1>
                 <h2 className="line-clamp-3 text-xl md:line-clamp-4 md:text-2xl">
-                  {removeHTMLTags(comic?.content)}
+                  {removeHTMLTags(manga?.content)}
                 </h2>
 
                 <div className="flex w-full flex-1 items-center space-x-4 text-sm md:text-2xl">
                   <Link
                     href={`/${MANGA_PATH_NAME}/${MANGA_PATH_DETAILS_NAME}/${encodeURIComponent(
-                      comic?.slug,
+                      manga?.slug,
                     )}`}
                   >
                     <a>
@@ -106,7 +96,7 @@ const RandomComics = ({ id }: IProps) => {
                   </Link>
 
                   <button
-                    data-id={comic?.slug}
+                    data-id={manga?.slug}
                     className="h-fit rounded-xl bg-primary p-4 transition-all duration-200 hover:scale-110"
                   >
                     Đọc ngay
@@ -118,7 +108,7 @@ const RandomComics = ({ id }: IProps) => {
                   <Image
                     priority
                     className="absolute inset-0 h-max w-auto object-cover object-center"
-                    src={`https://img.otruyenapi.com/uploads/comics/${comic?.thumb_url}`}
+                    src={`https://img.otruyenapi.com/uploads/comics/${manga?.thumb_url}`}
                     alt="comic-img"
                     layout="fill"
                   />

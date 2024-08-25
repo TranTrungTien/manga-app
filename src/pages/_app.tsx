@@ -6,9 +6,8 @@ import '~/styles/magic.min.css';
 
 import { Analytics } from '@vercel/analytics/react';
 import { Provider as JotaiProvider } from 'jotai';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
-import NProgress from 'nprogress';
 import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { useEventListener, useLocalStorage } from 'usehooks-ts';
 import MainLayout from '~/components/layouts/MainLayout';
@@ -37,6 +36,7 @@ type AppPropsWithLayout = AppProps & {
 
 function MyApp({
   Component,
+  pageProps,
 }: // pageProps: { session, ...pageProps },
 AppPropsWithLayout) {
   const router = useRouter();
@@ -121,11 +121,11 @@ AppPropsWithLayout) {
       <JotaiProvider>
         <SubscriptionContextProvider value={subscription}>
           <NotificationObserver>
-            <SocketContextProvider>
-              <HistoryRouteContextProvider>
-                {getLayout(<Component />)}
-              </HistoryRouteContextProvider>
-            </SocketContextProvider>
+            {/* <SocketContextProvider> */}
+            <HistoryRouteContextProvider>
+              {getLayout(<Component {...pageProps} />)}
+            </HistoryRouteContextProvider>
+            {/* </SocketContextProvider> */}
           </NotificationObserver>
         </SubscriptionContextProvider>
       </JotaiProvider>
