@@ -2,29 +2,25 @@
 import 'swiper/css';
 import 'swiper/css/pagination';
 
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
-import { memo } from 'react';
 import LazyLoad from 'react-lazy-load';
 import { FreeMode, Mousewheel, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import useSWR from 'swr';
 import ClientOnly from '~/components/shared/ClientOnly';
 import {
   MANGA_PATH_DETAILS_NAME,
   MANGA_PATH_NAME,
   STATUS_MAPPING,
 } from '~/constants';
-import { axiosClientV2 } from '~/services/axiosClient';
 import { Comic } from '~/types';
-import dayjs from 'dayjs';
 
-const SeasonalComics = () => {
-  const { data: comics } = useSWR<Comic[]>('manga', async () => {
-    const { data } = await axiosClientV2.get('/v1/api/the-loai/manga?page=1');
-    const { items: comics } = data;
-    return comics;
-  });
+type IProps = {
+  mangas: Comic[];
+};
+
+const SeasonalComics = ({ mangas }: IProps) => {
   return (
     <div className="my-4 h-[250px] w-full bg-red-500/0 text-white md:h-[300px]">
       <ClientOnly>
@@ -50,14 +46,14 @@ const SeasonalComics = () => {
           modules={[Mousewheel, Pagination, FreeMode]}
           className="section-swiper full-size hover:cursor-grab"
         >
-          {comics?.length
-            ? comics?.map((comic) => {
+          {mangas?.length
+            ? mangas?.map((manga) => {
                 return (
-                  <LazyLoad key={comic?._id}>
+                  <LazyLoad key={manga?._id}>
                     <SwiperSlide className="absolute-center pb-4 md:pb-0">
                       <Link
                         href={`/${MANGA_PATH_NAME}/${MANGA_PATH_DETAILS_NAME}/${encodeURIComponent(
-                          comic?.slug,
+                          manga?.slug,
                         )}`}
                       >
                         <a className="full-size">
@@ -67,24 +63,24 @@ const SeasonalComics = () => {
                                 priority
                                 layout="fill"
                                 className="absolute inset-0 object-cover object-center"
-                                src={`https://img.otruyenapi.com/uploads/comics/${comic?.thumb_url}`}
+                                src={`https://img.otruyenapi.com/uploads/comics/${manga?.thumb_url}`}
                                 alt="comic-img"
                               />
                             </figure>
                             <div className="col-span-4 flex flex-col px-6 py-2 md:col-span-3 md:space-y-4 lg:col-span-4">
                               <h1 className="line-clamp-2 font-secondary text-3xl transition-all duration-200 hover:text-primary lg:text-4xl">
-                                {comic?.name}
+                                {manga?.name}
                               </h1>
 
                               <p className="lg:line-clamp-[9] line-clamp-6 text-xl font-light md:text-2xl">
-                                Trạng thái: {STATUS_MAPPING[comic?.status]}
+                                Trạng thái: {STATUS_MAPPING[manga?.status]}
                               </p>
                               <p className="lg:line-clamp-[9] line-clamp-6 text-xl font-light md:text-2xl">
-                                Chap: {comic?.chaptersLatest[0]?.chapter_name}
+                                Chap: {manga?.chaptersLatest[0]?.chapter_name}
                               </p>
                               <p className="lg:line-clamp-[9] line-clamp-6 text-xl font-light md:text-2xl">
                                 Cập nhật:
-                                {dayjs(comic?.updatedAt).format('DD/MM/YYYY')}
+                                {dayjs(manga?.updatedAt).format('DD/MM/YYYY')}
                               </p>
                             </div>
                           </div>

@@ -67,7 +67,7 @@ const Banner = ({ comics }: IProps) => {
         {/* list render  */}
         {comics?.map((comic) => {
           return (
-            <SwiperSlide key={comic?.slug}>
+            <SwiperSlide key={comic?._id}>
               <Link
                 href={{
                   pathname: `/${MANGA_PATH_NAME}/${MANGA_PATH_DETAILS_NAME}/${encodeURIComponent(

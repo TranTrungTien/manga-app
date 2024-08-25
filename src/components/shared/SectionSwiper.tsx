@@ -55,7 +55,7 @@ function SectionSwiper({ comics = [] }: Readonly<IProps>) {
           ? comics.map((comic, idx) => {
               if (matchesMobile && idx > 20) return;
               return (
-                <LazyLoad key={`${comic._id}`}>
+                <LazyLoad key={`${comic._id + idx}`}>
                   <SwiperSlide>
                     <SectionSwiperCard comic={comic} />
                     <Link
